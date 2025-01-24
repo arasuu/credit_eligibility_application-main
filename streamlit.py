@@ -11,11 +11,11 @@ This app predicts whether a loan applicant is eligible for a loan
 based on various personal and financial characteristics.
 """)
 
-"""# Optional password protection (remove if not needed)
+'''# Optional password protection (remove if not needed)
 password_guess = st.text_input("Please enter your password?")
 # this password is stores in streamlit secrets
 if password_guess != st.secrets["password"]:
-    st.stop()"""
+    st.stop()'''
 
 # Load the pre-trained model
 rf_pickle = open("random_forest_credit.pickle", "rb")

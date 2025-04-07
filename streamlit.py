@@ -1,15 +1,19 @@
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-import pickle
 import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pickle
 
-# Set the page title and description
+# ✅ This must come immediately after importing streamlit
+st.set_page_config(
+    page_title="Loan Eligibility Predictor",
+    page_icon="💳",
+    layout="centered"
+)
+
+# Now your other Streamlit UI code can follow
 st.title("Credit Loan Eligibility Predictor")
-st.write("""
-This app predicts whether a loan applicant is eligible for a loan 
-based on various personal and financial characteristics.
-""")
+st.write("This app predicts whether a loan applicant is eligible for a loan...")
 
 
 # Load the pre-trained model

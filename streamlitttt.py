@@ -80,4 +80,4 @@ if st.button("Check Eligibility", key="check_eligibility"):
 
 # Footer
 st.markdown("---")
-st.markdown("Made with ❤️ by [Your Name].")
+

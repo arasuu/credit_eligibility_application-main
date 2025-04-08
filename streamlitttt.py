@@ -13,27 +13,36 @@ with open("trained_features.pickle", "rb") as f:
 
 # Streamlit UI
 st.set_page_config(page_title="Loan Eligibility Checker", layout="centered")
-st.title("🏦 Loan Eligibility Predictor")
+st.title("🏦 **Loan Eligibility Predictor**")
 
-# Input fields
+# Add a brief description to the page
+st.markdown("""
+    Welcome to the **Loan Eligibility Predictor**. Please enter the applicant's details below, and we will 
+    predict whether they are eligible for a loan based on the information provided.
+""", unsafe_allow_html=True)
+
+# Add a divider for a clean section
+st.markdown("---")
+
+# Input fields with custom styling
 st.subheader("Enter applicant details:")
 
-dependents = st.selectbox("Number of Dependents", ["0", "1", "2", "3+"], index=0)
-applicant_income = st.number_input("Applicant Income", min_value=0)
-coapplicant_income = st.number_input("Coapplicant Income", min_value=0)
-loan_amount = st.number_input("Loan Amount (in thousands)", min_value=0)
-loan_term = st.selectbox("Loan Term (in days)", [360.0, 120.0, 180.0, 300.0, 240.0, 60.0, 84.0, 36.0])
-credit_history = st.selectbox("Credit History", ["1.0 (Good)", "0.0 (Bad)"])
+dependents = st.selectbox("Number of Dependents", ["0", "1", "2", "3+"], index=0, key="dependents")
+applicant_income = st.number_input("Applicant Income (₹)", min_value=0, value=5000, step=1000, key="applicant_income")
+coapplicant_income = st.number_input("Coapplicant Income (₹)", min_value=0, value=0, step=1000, key="coapplicant_income")
+loan_amount = st.number_input("Loan Amount (₹ in thousands)", min_value=0, value=100, step=10, key="loan_amount")
+loan_term = st.selectbox("Loan Term (in months)", [360, 120, 180, 300, 240, 60, 84, 36], key="loan_term")
+credit_history = st.selectbox("Credit History", ["1.0 (Good)", "0.0 (Bad)"], index=0, key="credit_history")
 
-gender = st.selectbox("Gender", ["Male", "Female"])
-married = st.selectbox("Married", ["Yes", "No"])
-education = st.selectbox("Education", ["Graduate", "Not Graduate"])
-self_employed = st.selectbox("Self Employed", ["Yes", "No"])
-property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"])
+gender = st.selectbox("Gender", ["Male", "Female"], key="gender")
+married = st.selectbox("Married", ["Yes", "No"], key="married")
+education = st.selectbox("Education", ["Graduate", "Not Graduate"], key="education")
+self_employed = st.selectbox("Self Employed", ["Yes", "No"], key="self_employed")
+property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"], key="property_area")
 
 # Submit button
-if st.button("Check Eligibility"):
-    
+st.markdown("---")  # Divider
+if st.button("Check Eligibility", key="check_eligibility"):
     # Build input dict
     input_dict = {
         "Dependents": float(dependents.replace("+", "")),
@@ -59,9 +68,15 @@ if st.button("Check Eligibility"):
 
     input_data = pd.DataFrame([input_dict])[trained_features]
 
+    # Prediction
     prediction = rf_model.predict(input_data)[0]
 
+    # Displaying the result with styling
     if prediction == 1:
-        st.success("✅ Loan Approved! The applicant is **eligible**.")
+        st.success("✅ **Loan Approved!** The applicant is **eligible** for the loan.")
     else:
-        st.error("❌ Loan Not Approved. The applicant is **not eligible**.")
+        st.error("❌ **Loan Not Approved.** The applicant is **not eligible** for the loan.")
+
+# Footer
+st.markdown("---")
+st.markdown("Made with ❤️ by [Your Name].")

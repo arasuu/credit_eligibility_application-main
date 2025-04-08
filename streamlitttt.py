@@ -36,31 +36,31 @@ with st.form("user_inputs"):
 
     submitted = st.form_submit_button("Predict Loan Eligibility")
 
-
-if submitted:
-    # --- FEATURE ENCODING ---
-    Gender_Male = 1 if Gender == "Male" else 0
-    Married_Yes = 1 if Married == "Yes" else 0
-    Education_Not_Graduate = 1 if Education == "Not Graduate" else 0
-    Self_Employed_Yes = 1 if Self_Employed == "Yes" else 0
-    Property_Area_Semiurban = 1 if Property_Area == "Semiurban" else 0
-    Property_Area_Urban = 1 if Property_Area == "Urban" else 0
-
+        
     if submitted:
-    # Properly encode categorical variables
-    Dependents_1, Dependents_2, Dependents_3 = 0, 0, 0
-    if Dependents == "1":
-        Dependents_1 = 1
-    elif Dependents == "2":
-        Dependents_2 = 1
-    elif Dependents == "3+":
-        Dependents_3 = 1
-
+        # --- FEATURE ENCODING ---
+        Gender_Male = 1 if Gender == "Male" else 0
+        Married_Yes = 1 if Married == "Yes" else 0
+        Education_Not_Graduate = 1 if Education == "Not Graduate" else 0
+        Self_Employed_Yes = 1 if Self_Employed == "Yes" else 0
+        Property_Area_Semiurban = 1 if Property_Area == "Semiurban" else 0
+        Property_Area_Urban = 1 if Property_Area == "Urban" else 0
+        
+     if submitted:
+        # Properly encode categorical variables
+        Dependents_1, Dependents_2, Dependents_3 = 0, 0, 0
+        if Dependents == "1":
+            Dependents_1 = 1
+        elif Dependents == "2":
+            Dependents_2 = 1
+        elif Dependents == "3+":
+            Dependents_3 = 1
+        
     Gender_Male = 1 if Gender == "Male" else 0
     Married_Yes = 1 if Married == "Yes" else 0
     Education_Not_Graduate = 1 if Education == "Not Graduate" else 0
     Self_Employed_Yes = 1 if Self_Employed == "Yes" else 0
-
+    
     Property_Area_Semiurban = 1 if Property_Area == "Semiurban" else 0
     Property_Area_Urban = 1 if Property_Area == "Urban" else 0
 

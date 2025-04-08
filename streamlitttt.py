@@ -46,9 +46,52 @@ if submitted:
     Property_Area_Semiurban = 1 if Property_Area == "Semiurban" else 0
     Property_Area_Urban = 1 if Property_Area == "Urban" else 0
 
-    Dependents_1 = 1 if Dependents == "1" else 0
-    Dependents_2 = 1 if Dependents == "2" else 0
-    Dependents_3_plus = 1 if Dependents == "3+" else 0
+    if submitted:
+    # Properly encode categorical variables
+    Dependents_1, Dependents_2, Dependents_3 = 0, 0, 0
+    if Dependents == "1":
+        Dependents_1 = 1
+    elif Dependents == "2":
+        Dependents_2 = 1
+    elif Dependents == "3+":
+        Dependents_3 = 1
+
+    Gender_Male = 1 if Gender == "Male" else 0
+    Married_Yes = 1 if Married == "Yes" else 0
+    Education_Not_Graduate = 1 if Education == "Not Graduate" else 0
+    Self_Employed_Yes = 1 if Self_Employed == "Yes" else 0
+
+    Property_Area_Semiurban = 1 if Property_Area == "Semiurban" else 0
+    Property_Area_Urban = 1 if Property_Area == "Urban" else 0
+
+    # Construct the final input
+    input_data = [[
+        Dependents_1, Dependents_2, Dependents_3,
+        ApplicantIncome, CoapplicantIncome, LoanAmount,
+        int(Loan_Amount_Term), int(Credit_History),
+        Gender_Male, Married_Yes,
+        Education_Not_Graduate, Self_Employed_Yes,
+        Property_Area_Semiurban, Property_Area_Urban
+    ]]
+
+    # You must match this input to the training order
+    input_df = pd.DataFrame(input_data, columns=[
+        'Dependents_1', 'Dependents_2', 'Dependents_3',
+        'ApplicantIncome', 'CoapplicantIncome', 'LoanAmount',
+        'Loan_Amount_Term', 'Credit_History',
+        'Gender_Male', 'Married_Yes',
+        'Education_Not_Graduate', 'Self_Employed_Yes',
+        'Property_Area_Semiurban', 'Property_Area_Urban'
+    ])
+
+    # Predict
+    prediction = rf_model.predict(input_df)
+
+    st.subheader("Prediction Result")
+    if prediction[0] == 1:
+        st.success("✅ You are eligible for a loan!")
+    else:
+        st.error("❌ Sorry, you are not eligible for a loan.")
 
     # --- PREDICTION INPUT ---
     input_data = [[

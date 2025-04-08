@@ -1,66 +1,67 @@
 import streamlit as st
-import pickle
+import numpy as np
 import pandas as pd
+import pickle
 
-# Load the model
-with open('random_forest_credit.pickle', 'rb') as f:
+# Load the trained model
+with open("random_forest_credit.pickle", "rb") as f:
     rf_model = pickle.load(f)
 
-st.set_page_config(page_title="Loan Eligibility Predictor")
+# Load the list of features the model was trained on
+with open("trained_features.pickle", "rb") as f:
+    trained_features = pickle.load(f)
 
-st.title("🏦 Loan Eligibility Prediction App")
-st.write("Fill the form below to check if you're eligible for a loan:")
+# Streamlit UI
+st.set_page_config(page_title="Loan Eligibility Checker", layout="centered")
+st.title("🏦 Loan Eligibility Predictor")
 
-# Form for user input
-with st.form("loan_form"):
-    Gender = st.selectbox("Gender", ['Male', 'Female'])
-    Married = st.selectbox("Married", ['Yes', 'No'])
-    Dependents = st.selectbox("Dependents", ['0', '1', '2', '3+'])
-    Education = st.selectbox("Education", ['Graduate', 'Not Graduate'])
-    Self_Employed = st.selectbox("Self Employed", ['Yes', 'No'])
-    ApplicantIncome = st.number_input("Applicant Income", min_value=0)
-    CoapplicantIncome = st.number_input("Coapplicant Income", min_value=0)
-    LoanAmount = st.number_input("Loan Amount", min_value=0)
-    Loan_Amount_Term = st.selectbox("Loan Amount Term", [360.0, 180.0, 120.0, 240.0, 300.0])
-    Credit_History = st.selectbox("Credit History", [1.0, 0.0])
-    Property_Area = st.selectbox("Property Area", ['Urban', 'Semiurban', 'Rural'])
+# Input fields
+st.subheader("Enter applicant details:")
 
-    submitted = st.form_submit_button("Check Eligibility")
+dependents = st.selectbox("Number of Dependents", ["0", "1", "2", "3+"], index=0)
+applicant_income = st.number_input("Applicant Income", min_value=0)
+coapplicant_income = st.number_input("Coapplicant Income", min_value=0)
+loan_amount = st.number_input("Loan Amount (in thousands)", min_value=0)
+loan_term = st.selectbox("Loan Term (in days)", [360.0, 120.0, 180.0, 300.0, 240.0, 60.0, 84.0, 36.0])
+credit_history = st.selectbox("Credit History", ["1.0 (Good)", "0.0 (Bad)"])
 
-    if submitted:
-        input_dict = {
-            'Dependents': [Dependents],
-            'ApplicantIncome': [ApplicantIncome],
-            'CoapplicantIncome': [CoapplicantIncome],
-            'LoanAmount': [LoanAmount],
-            'Loan_Amount_Term': [Loan_Amount_Term],
-            'Credit_History': [Credit_History],
-            'Gender_Male': [1 if Gender == 'Male' else 0],
-            'Married_Yes': [1 if Married == 'Yes' else 0],
-            'Education_Not_Graduate': [1 if Education == 'Not Graduate' else 0],
-            'Self_Employed_Yes': [1 if Self_Employed == 'Yes' else 0],
-            'Property_Area_Semiurban': [1 if Property_Area == 'Semiurban' else 0],
-            'Property_Area_Urban': [1 if Property_Area == 'Urban' else 0]
-        }
+gender = st.selectbox("Gender", ["Male", "Female"])
+married = st.selectbox("Married", ["Yes", "No"])
+education = st.selectbox("Education", ["Graduate", "Not Graduate"])
+self_employed = st.selectbox("Self Employed", ["Yes", "No"])
+property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"])
 
-        input_data = pd.DataFrame(input_dict)
+# Submit button
+if st.button("Check Eligibility"):
+    
+    # Build input dict
+    input_dict = {
+        "Dependents": float(dependents.replace("+", "")),
+        "ApplicantIncome": applicant_income,
+        "CoapplicantIncome": coapplicant_income,
+        "LoanAmount": loan_amount,
+        "Loan_Amount_Term": float(loan_term),
+        "Credit_History": float(credit_history[0]),  # extract 1 or 0 from string
 
-        # Align features with training data
-        trained_features = list(rf_model.feature_names_in_)
+        # Dummies
+        "Gender_Male": 1 if gender == "Male" else 0,
+        "Married_Yes": 1 if married == "Yes" else 0,
+        "Education_Not_Graduate": 1 if education == "Not Graduate" else 0,
+        "Self_Employed_Yes": 1 if self_employed == "Yes" else 0,
+        "Property_Area_Semiurban": 1 if property_area == "Semiurban" else 0,
+        "Property_Area_Urban": 1 if property_area == "Urban" else 0,
+    }
 
-        # Ensure all required columns are present
-        for col in trained_features:
-            if col not in input_data.columns:
-                input_data[col] = 0
+    # Ensure all features are included (even if 0)
+    for col in trained_features:
+        if col not in input_dict:
+            input_dict[col] = 0
 
-        # Ensure exact order
-        input_data = input_data[trained_features]
+    input_data = pd.DataFrame([input_dict])[trained_features]
 
-        # Make prediction
-        prediction = rf_model.predict(input_data)[0]
+    prediction = rf_model.predict(input_data)[0]
 
-        # Show result
-        if prediction == 1:
-            st.success("✅ Loan Approved!")
-        else:
-            st.error("❌ Loan Not Approved.")
+    if prediction == 1:
+        st.success("✅ Loan Approved! The applicant is **eligible**.")
+    else:
+        st.error("❌ Loan Not Approved. The applicant is **not eligible**.")

@@ -65,3 +65,4 @@ if st.button("Check Eligibility"):
         st.success("✅ Loan Approved! The applicant is **eligible**.")
     else:
         st.error("❌ Loan Not Approved. The applicant is **not eligible**.")
+

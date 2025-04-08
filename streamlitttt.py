@@ -7,6 +7,9 @@ import pickle
 with open("random_forest_credit.pickle", "rb") as f:
     rf_model = pickle.load(f)
 
+# Load the list of features the model was trained on
+with open("trained_features.pickle", "rb") as f:
+    trained_features = pickle.load(f)
 
 # Streamlit UI
 st.set_page_config(page_title="Loan Eligibility Checker", layout="centered")
@@ -62,4 +65,3 @@ if st.button("Check Eligibility"):
         st.success("✅ Loan Approved! The applicant is **eligible**.")
     else:
         st.error("❌ Loan Not Approved. The applicant is **not eligible**.")
-

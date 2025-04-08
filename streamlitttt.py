@@ -65,7 +65,7 @@ with st.form("credit_form"):
         trained_features = rf_model.feature_names_in_
         input_data = input_data[trained_features]
 
-                # Align columns with training data
+        # Align columns with training data
         trained_features = list(rf_model.feature_names_in_)
         
         # Add any missing columns as 0

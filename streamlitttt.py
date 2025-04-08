@@ -12,6 +12,7 @@ with open("trained_features.pickle", "rb") as f:
     trained_features = pickle.load(f)
 
 # Streamlit UI
+
 st.set_page_config(page_title="Loan Eligibility Checker", layout="centered")
 st.title("🏦 **Loan Eligibility Predictor**")
 

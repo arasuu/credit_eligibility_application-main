@@ -58,6 +58,9 @@ with st.form("credit_form"):
             'Dependents_1', 'Dependents_2', 'Dependents_3'
         ])
 
+        trained_features = rf_model.feature_names_in_
+        input_data = input_data[trained_features]
+
         # Reorder to match training features if necessary
         trained_features = rf_model.feature_names_in_
         input_data = input_data[trained_features]

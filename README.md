@@ -58,3 +58,8 @@ If you want to run the application locally, follow these steps:
    streamlit run app.py
 
 #### Thank you for using the Credit Eligibility Application! Feel free to share your feedback.
+
+
+🤝 Acknowledgements Thanks to all contributors and dataset providers. This is a learning project for educational and demonstrative purposes.
+
+🔗 Author: Arasu Ragupathi 📧 Contact: arasuragu23@gmail.com 🌟 GitHub: https://github.com/arasuu
